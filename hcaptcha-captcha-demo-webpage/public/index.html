@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Register (hCaptcha)</title>
+  <!-- hCaptcha client SDK -->
+  <script src="https://js.hcaptcha.com/1/api.js?onload=onHcaptchaLoad&render=explicit" async defer></script>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    h1 { margin-bottom: 10px; }
+    form { max-width: 320px; }
+    input { display: block; width: 100%; padding: 8px; margin: 5px 0; }
+    button { padding: 8px 16px; margin-top: 8px; }
+    .h-captcha { margin: 10px 0; }
+  </style>
+</head>
+<body>
+  <h1>Register</h1>
+  <form id="registerForm">
+    <input type="text" id="registerName" name="name" placeholder="Name" required />
+    <input type="email" id="registerEmail" name="email" placeholder="Email" required />
+    <input type="password" id="registerPassword" name="password" placeholder="Password" required />
+    <input type="password" id="registerConfirmPassword" name="confirmPassword" placeholder="Confirm Password" required />
+
+    <!-- Replace 123456789 with your hCaptcha site key -->
+    <div id="hcaptcha-widget"
+         class="h-captcha"
+         data-sitekey="123456789"
+         data-size="invisible"
+         data-callback="onHcaptchaSuccess"
+         data-error-callback="onHcaptchaError"
+         data-expired-callback="onHcaptchaExpired"></div>
+
+    <button type="submit">Register</button>
+  </form>
+
+  <script src="register.js"></script>
+</body>
+</html>
