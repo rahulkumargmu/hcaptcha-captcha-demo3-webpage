@@ -1,0 +1,38 @@
+{
+  "experiment_name": "demo3-vm14-vm16-comparison",
+  "experiment_origin": "https://hcaptcha-captcha-demo3-webpage.vercel.app",
+  "experiment_origins": [
+    "https://hcaptcha-captcha-demo2-webpage.vercel.app",
+    "https://hcaptcha-captcha-demo3-webpage.vercel.app"
+  ],
+  "experiment_url": "https://hcaptcha-captcha-demo3-webpage.vercel.app/",
+  "extension": {
+    "name": "VMC frame observer (demo2 + demo3)",
+    "version": "1.2.1"
+  },
+  "collector": {
+    "flush_interval_ms": 50,
+    "batch_max_records": 500,
+    "queue_limit": 50000,
+    "node_rect_min_interval_ms": 250,
+    "env_poll_interval_ms": 1000,
+    "composed_path_for_high_frequency": false
+  },
+  "vm_observer": {
+    "enabled": true,
+    "frame_url_prefixes": [
+      "https://newassets.hcaptcha.com/captcha/"
+    ],
+    "observe_messages": true,
+    "observe_proof_calls": true,
+    "proof_globals": [
+      "hsw"
+    ],
+    "observe_settlement": false,
+    "capture_ctx_verbatim": true
+  },
+  "comparison": {
+    "timing_tolerance_ms": 3,
+    "association_window_ms": 50
+  }
+}

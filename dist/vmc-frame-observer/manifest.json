@@ -1,0 +1,58 @@
+{
+  "manifest_version": 3,
+  "name": "VMC frame observer (demo2 + demo3)",
+  "version": "1.2.1",
+  "description": "Records hCaptcha iframe events and genuine vm_data observations on the configured experiment pages. Local only; makes no network requests. Saves a finished HSW collector report to the downloads folder.",
+  "minimum_chrome_version": "111",
+  "permissions": [
+    "downloads",
+    "storage",
+    "unlimitedStorage",
+    "webNavigation"
+  ],
+  "host_permissions": [
+    "https://hcaptcha-captcha-demo2-webpage.vercel.app/*",
+    "https://hcaptcha-captcha-demo3-webpage.vercel.app/*",
+    "https://newassets.hcaptcha.com/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://hcaptcha-captcha-demo3-webpage.vercel.app/*",
+        "https://hcaptcha-captcha-demo2-webpage.vercel.app/*",
+        "https://newassets.hcaptcha.com/captcha/*"
+      ],
+      "js": [
+        "config.js",
+        "bridge.js"
+      ],
+      "run_at": "document_start",
+      "all_frames": true
+    },
+    {
+      "matches": [
+        "https://newassets.hcaptcha.com/captcha/*"
+      ],
+      "js": [
+        "observer-main.js"
+      ],
+      "run_at": "document_start",
+      "all_frames": true,
+      "world": "MAIN"
+    },
+    {
+      "matches": [
+        "https://newassets.hcaptcha.com/captcha/*"
+      ],
+      "js": [
+        "collector-capture.js"
+      ],
+      "run_at": "document_start",
+      "all_frames": true,
+      "world": "MAIN"
+    }
+  ]
+}

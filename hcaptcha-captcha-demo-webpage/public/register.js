@@ -126,6 +126,15 @@
     updateHswDialog();
     setInterval(updateHswDialog, 1000);
 
+    const updateObserverHelp = () => {
+      const help = document.getElementById('vmcObserverHelp');
+      if (!help) return;
+      const observer = window.__vmcSite && window.__vmcSite.status();
+      help.hidden = !observer || !['not_detected', 'stale'].includes(observer.ext);
+    };
+    updateObserverHelp();
+    setInterval(updateObserverHelp, 1000);
+
     const form = document.getElementById('registerForm');
     form.addEventListener('submit', (e) => {
       e.preventDefault();

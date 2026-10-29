@@ -14,6 +14,7 @@
     input { display: block; width: 100%; padding: 8px; margin: 5px 0; }
     button { padding: 8px 16px; margin-top: 8px; }
     .h-captcha { margin: 10px 0; }
+    #vmcObserverHelp { max-width: 36rem; font-size: 14px; line-height: 1.5; }
     #hswDialog {
       position: fixed;
       right: 16px;
@@ -56,6 +57,14 @@
 
     <button type="submit">Register</button>
   </form>
+
+  <p id="vmcObserverHelp" role="status" hidden>
+    Iframe recording needs the VMC companion extension enabled.
+    <a href="vmc/vmc-frame-observer-demo2-demo3.zip" download>Download the demo2 + demo3 observer</a>,
+    unzip it, then use <strong>Load unpacked</strong> in <code>chrome://extensions</code>
+    to select its folder. Reload this page after loading it.
+    Disable the older demo2-only VMC observer before loading this combined version.
+  </p>
 
   <aside id="hswDialog" role="dialog" aria-label="hsw check">
     <p class="cmd">typeof window.hsw === "function"</p>

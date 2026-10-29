@@ -1,0 +1,32 @@
+{
+  "manifest_version": 3,
+  "name": "VMC frame observer (research)",
+  "version": "__VERSION__",
+  "description": "Records hCaptcha iframe events and genuine vm_data observations on the configured experiment pages. Local only; makes no network requests. Saves a finished HSW collector report to the downloads folder.",
+  "minimum_chrome_version": "111",
+  "permissions": ["downloads", "storage", "unlimitedStorage", "webNavigation"],
+  "host_permissions": __HOST_PERMISSIONS__,
+  "background": { "service_worker": "background.js" },
+  "content_scripts": [
+    {
+      "matches": __BRIDGE_MATCHES__,
+      "js": ["config.js", "bridge.js"],
+      "run_at": "document_start",
+      "all_frames": true
+    },
+    {
+      "matches": __OBSERVER_MATCHES__,
+      "js": ["observer-main.js"],
+      "run_at": "document_start",
+      "all_frames": true,
+      "world": "MAIN"
+    },
+    {
+      "matches": __OBSERVER_MATCHES__,
+      "js": ["collector-capture.js"],
+      "run_at": "document_start",
+      "all_frames": true,
+      "world": "MAIN"
+    }
+  ]
+}
