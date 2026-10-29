@@ -12,8 +12,9 @@ const experimentOriginForUrl = (url) => {
   } catch (_) { return null; }
 };
 const VERSION = chrome.runtime.getManifest().version;
-// Optional opt-in source-capture transport (only present in the source-archiver build).
-try { importScripts('source_scope.js', 'source_capture.js'); } catch (_) { /* base observer build has neither */ }
+// Only the source-archiver build packages these scripts. Even a caught failed
+// import is reported by Chrome, so the base observer must never request them.
+if (CFG.source_capture) importScripts('source_scope.js', 'source_capture.js');
 const SRC = (self.VMC_SourceCapture && CFG.source_capture) ? new self.VMC_SourceCapture(CFG.source_capture) : null;
 const pad = (n) => String(n).padStart(8, '0');
 const counters = new Map(); // tabId + experiment origin -> {frames:Set, snapshots, records, batches}

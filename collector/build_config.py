@@ -3,7 +3,7 @@
 from pathlib import Path
 
 PROJECT_DIR = Path(__file__).resolve().parents[1]
-COLLECTOR_VERSION = "1.2.1"
+COLLECTOR_VERSION = "1.2.2"
 SCHEMA_VERSION = "1.1.0"
 NOT_MONITORED = {
     "pointerover/pointerout/pointerenter/pointerleave": "not requested; mouse transition events are recorded instead",

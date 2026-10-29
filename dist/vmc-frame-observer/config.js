@@ -10,7 +10,7 @@ self.VMC_EXTENSION_CONFIG = {
     "https://newassets.hcaptcha.com/captcha/"
   ],
   "build": {
-    "built_utc": "2026-10-29T22:02:01.453570+00:00",
+    "built_utc": "2026-10-29T22:14:44.620425+00:00",
     "builder": "collector/build.py",
     "sources": [
       {
@@ -19,7 +19,7 @@ self.VMC_EXTENSION_CONFIG = {
       },
       {
         "path": "collector/build_config.py",
-        "sha256": "8b07d0de7db7ff67c1b542e81d3c5c4849bde0aed1c95144ebf31fab5a868334"
+        "sha256": "55c6c21b7bb9c0b739ff65b74c6250735da0b36934892e6594958a1bfce00cfe"
       },
       {
         "path": "collector/collector.js",
@@ -35,11 +35,11 @@ self.VMC_EXTENSION_CONFIG = {
       },
       {
         "path": "collector/extension_src/background.js",
-        "sha256": "e599131f79c327b13bb82acb4a690d2f280d4f912f76ba3b6c935b01cca55ef0"
+        "sha256": "de77434590a0b202653987be98d969e1363bbc2ef23ea47d31a80c686ba76ad6"
       },
       {
         "path": "collector/extension_src/hsw_capture_download.js",
-        "sha256": "7d0052f67c44d201f3a98fb0f15ad7d24799fb2711f832603ff8dbb34a0a6368"
+        "sha256": "6caf940f374992fa7ba14572d36d8aab32acf9248b6b9ed79736095cc83e6a2d"
       },
       {
         "path": "collector-capture.js",

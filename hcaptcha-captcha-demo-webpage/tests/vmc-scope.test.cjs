@@ -47,6 +47,8 @@ function bridgeContext(topOrigin, frame = false) {
 function backgroundContext() {
   const storage = {};
   const tabs = new Map();
+  const startupImports = [];
+  const importFailures = [];
   let receive, navigate, navigationFilter;
   const chrome = {
     runtime: {
@@ -66,15 +68,61 @@ function backgroundContext() {
   };
   const context = vm.createContext({ self: {}, chrome, URL, Blob, setTimeout, clearTimeout });
   context.importScripts = (...names) => {
-    for (const name of names) vm.runInContext(read(name), context);
+    for (const name of names) {
+      startupImports.push(name);
+      try { vm.runInContext(read(name), context); }
+      catch (error) { importFailures.push({ name, message: error.message }); throw error; }
+    }
   };
   vm.runInContext(read('background.js'), context);
   return {
-    context, storage, tabs, navigationFilter,
+    context, storage, tabs, navigationFilter, startupImports, importFailures,
     navigate: (event) => navigate(event),
     send: (message, sender) => new Promise((resolve) => receive(message, sender, resolve)),
   };
 }
+
+test('the base worker starts without requesting missing optional scripts', () => {
+  const background = backgroundContext();
+  assert.deepEqual(background.importFailures, []);
+  assert.deepEqual(background.startupImports, ['config.js', 'hsw_capture_download.js']);
+});
+
+function reportDownloadContext(failDownload = false) {
+  const downloads = [];
+  class WorkerURL extends URL {}
+  WorkerURL.createObjectURL = undefined;
+  WorkerURL.revokeObjectURL = undefined;
+  const context = vm.createContext({
+    self: {}, URL: WorkerURL, Blob, setTimeout, clearTimeout,
+    chrome: { downloads: { async download(options) {
+      downloads.push(options);
+      if (failDownload) throw new Error('unit-test download failure');
+      return 7;
+    } } },
+  });
+  vm.runInContext(read('hsw_capture_download.js'), context);
+  return { context, downloads };
+}
+
+test('report download preserves text without object-URL APIs in the service worker', async () => {
+  const { context, downloads } = reportDownloadContext();
+  const text = JSON.stringify({ fixture: 'UNIT_TEST_ONLY', note: 'Unicode λ and literal %' });
+  context.report = text;
+  const result = await vm.runInContext('saveHswReport(report, 1)', context);
+  assert.equal(result.ok, true);
+  assert.equal(result.downloadId, 7);
+  assert.equal(downloads.length, 1);
+  const prefix = 'data:application/json;charset=utf-8,';
+  assert.ok(downloads[0].url.startsWith(prefix));
+  assert.equal(decodeURIComponent(downloads[0].url.slice(prefix.length)), text);
+});
+
+test('report download failures return an error instead of rejecting the worker message', async () => {
+  const { context } = reportDownloadContext(true);
+  const result = await vm.runInContext('saveHswReport("UNIT_TEST_ONLY", 1)', context);
+  assert.match(result.error, /unit-test download failure/);
+});
 
 test('the manifest and all embedded scopes contain the same two exact origins', () => {
   const site = bundleConfig(path.join(root, 'public/vmc/vmc-site-collector.js'));

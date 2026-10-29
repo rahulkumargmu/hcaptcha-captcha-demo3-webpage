@@ -24,25 +24,16 @@ function hswDrop(id) {
 async function saveHswReport(text, runId) {
   const stamp = new Date().toISOString().replace(/[:.]/g, '-');
   const filename = `vmc/hsw-capture-run-${runId == null ? 'x' : runId}-${stamp}.json`;
-  const blob = new Blob([text], { type: 'application/json' });
-  const url = URL.createObjectURL(blob);
+  // MV3 service workers do not expose URL.createObjectURL. A data URL keeps
+  // the original report text local and works with the downloads permission.
   try {
+    const url = 'data:application/json;charset=utf-8,' + encodeURIComponent(text);
     const downloadId = await chrome.downloads.download({
       url, filename, saveAs: false, conflictAction: 'uniquify',
     });
-    return { ok: true, filename, downloadId };
+    return { ok: true, filename, downloadId, via: 'data-url' };
   } catch (err) {
-    try {
-      const dataUrl = 'data:application/json;charset=utf-8,' + encodeURIComponent(text);
-      const downloadId = await chrome.downloads.download({
-        url: dataUrl, filename, saveAs: false, conflictAction: 'uniquify',
-      });
-      return { ok: true, filename, downloadId, via: 'data-url' };
-    } catch (err2) {
-      return { error: 'download failed: ' + err2 };
-    }
-  } finally {
-    setTimeout(() => { try { URL.revokeObjectURL(url); } catch (_) {} }, 60000);
+    return { error: 'download failed: ' + err };
   }
 }
 

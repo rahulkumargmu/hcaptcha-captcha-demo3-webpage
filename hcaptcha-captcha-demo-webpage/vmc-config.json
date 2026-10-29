@@ -8,7 +8,7 @@
   "experiment_url": "https://hcaptcha-captcha-demo3-webpage.vercel.app/",
   "extension": {
     "name": "VMC frame observer (demo2 + demo3)",
-    "version": "1.2.1"
+    "version": "1.2.2"
   },
   "collector": {
     "flush_interval_ms": 50,
